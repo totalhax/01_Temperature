@@ -1,5 +1,8 @@
 from tkinter import *
 import random
+import winsound
+
+winsound.PlaySound('wav.wav', winsound.SND_FILENAME)
 
 
 class Converter:
@@ -42,12 +45,12 @@ class Converter:
 
         self.to_c_button = Button(self.conversion_buttons_frame,
                                   text="To Centigrade", font="System 10 bold",
-                                  bg="Blue", padx=10, pady=10)
+                                  bg="orange", padx=10, pady=10)
         self.to_c_button.grid(row=0, column=0)
 
         self.to_f_button = Button(self.conversion_buttons_frame,
                                   text="To Fahrenheit", font="System 10 bold",
-                                  bg="Red", padx=10, pady=10)
+                                  bg="yellow", padx=10, pady=10)
         self.to_f_button.grid(row=0, column=1)
 
         # Answer label (row 4)
@@ -71,5 +74,6 @@ class Converter:
 if __name__ == "__main__":
     root = Tk()
     root.title("Temp Converter")
+    root.resizable(width=False, height=False)
     something = Converter(root)
     root.mainloop()
