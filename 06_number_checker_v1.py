@@ -12,7 +12,10 @@ def temp_check(low):
         except ValueError:
             print("Please enter a number")
 
-NUMBER = temp_check(-273)
+number = temp_check(-273)
 print("you chose {}".format(number))
+
+number = temp_check(-459)
+print("You chose {}".format(number))
 
 
