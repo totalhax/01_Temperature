@@ -132,9 +132,6 @@ class Converter:
         return rounded
 
 
-
-
-
 # main routine
 if __name__ == "__main__":
     root = Tk()
