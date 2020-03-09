@@ -10,12 +10,9 @@ class TempCon:
         background_color = "#a8b8d0"
 
         self.all_calc_list = ['1 degrees F is -17.2 degrees C',
-                                 '12 degrees F is -11.1 degrees C',
-                                 '123 degrees F is 50.6 degrees C',
-                                 '1234 degrees F is 667.8 degrees C',
-                                 '12345 degrees F is 6840.6 degrees C',
-                                 '123456 degrees F is 68568.9 degrees C',
-                                 '1234567 degrees F is 685852.8 degrees C']
+                              '12 degrees F is -11.1 degrees C',
+                              '123456 degrees F is 68568.9 degrees C',
+                              '1234567 degrees F is 685852.8 degrees C']
 
         # Converter Main Screen GUI
         self.converter_frame = Frame(width=300, height=400, bg=background_color,
@@ -31,19 +28,17 @@ class TempCon:
 
         # History Button (row 1)
         self.history_button = Button(self.converter_frame, text="History",
-                                  font=("Terminal", "12"),
-                                  padx=10, pady=-10, command=self.history)
+                                     font=("Terminal", "12"),
+                                     padx=10, pady=-10,
+                                     command=lambda: self.history(self.all_calc_list))
         self.history_button.grid(row=1)
 
-    def history(self):
-        print("You Asked for history")
-        get_history = History(self)
-        get_history.history_text.configure(text="History text goes here",font=("Terminal", "8"))
-
+    def history(self, calc_history):
+        History(self, calc_history)
 
 
 class History:
-    def __init__(self, partner):
+    def __init__(self, partner, calc_history):
 
         background = "#aaaaaa"
 
@@ -72,6 +67,29 @@ class History:
                                                            "this session", wrap=250,
                                justify=LEFT, width=40, bg=background)
         self.history_text.grid(row=1)
+
+        history_string = ""
+
+        if len(calc_history) >= 7:
+            for item in range(0, 7):
+                history_string += calc_history[len(calc_history)
+                                                - item - 1]+"\n"
+
+        else:
+            for item in calc_history:
+                history_string += calc_history[len(calc_history) -
+                                                calc_history.index(item) - 1] + "\n"
+                self.history_text.config(text="Here is your calculation "
+                                              "history. You can use the "
+                                              "export button to save this "
+                                              "data to a text file if "
+                                              "desired.")
+
+
+        self.calc_label = Label(self.history_frame, text=history_string,
+                                bg=background,font="Arial 12", justify=LEFT)
+        self.calc_label.grid(row=2)
+
 
         self.export_dismiss_frame = Frame(self.history_frame)
         self.export_dismiss_frame.grid(row=3, pady=10)
