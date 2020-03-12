@@ -1,6 +1,6 @@
 from tkinter import *
+from functools import partial
 import random
-import winsound
 
 
 class Converter:
@@ -65,8 +65,12 @@ class Converter:
         self.hist_help_frame.grid(row=5, pady=10)
 
         self.calc_hist_button = Button(self.hist_help_frame, font="System 7 bold",
-                                       text="Calculation History", width=20)
+                                       text="Calculation History", width=20,
+                                       command=lambda: self.history(self.all_calc_list))
         self.calc_hist_button.grid(row=0, column=0)
+
+        if len(self.all_calc_list) == 0:
+            self.calc_hist_button.config(state=DISABLED)
 
         self.help_button = Button(self.hist_help_frame, font="System 7 bold",
                                   text="Help", width=5)
@@ -105,14 +109,9 @@ class Converter:
                 self.converted_label.configure(text=answer, fg="red")
                 self.to_convert_entry.configure(bg=error)
 
-            if answer != "Too Cold":
+            if has_errors != "yes":
                 self.all_calc_list.append(answer)
-                print(self.all_calc_list)
-
-
-
-
-
+                self.calc_hist_button.config(state=NORMAL)
         except ValueError:
             self.converted_label.configure(text="Enter a number!!", fg="red")
             self.to_convert_entry.configure(bg=error)
@@ -125,14 +124,83 @@ class Converter:
 
         return rounded
 
+    def history(self, calc_history):
+        History(self, calc_history)
 
 
+class History:
+    def __init__(self, partner, calc_history):
 
+        background = "#aaaaaa"
+
+        # disable history button
+        partner.calc_hist_button.config(state=DISABLED)
+
+        # Sets up Child Window (ie: history box)
+        self.history_box = Toplevel()
+
+        # If users press cross at top, closes history and 'releases' history button
+        self.history_box.protocol('WM_DELETE_WINDOW', partial(self.close_history, partner))
+
+        # Set up GUI Frame
+        self.history_frame = Frame(self.history_box, bg=background)
+        self.history_frame.grid()
+
+        # Set up History heading (row 0)
+        self.how_heading = Label(self.history_frame, text="Calculation History",
+                                 font=("Terminal", "15", "bold"), bg=background)
+        self.how_heading.grid(row=0)
+        # History text (label, row 1)
+        self.history_text = Label(self.history_frame, text="Here are you most recent "
+                                                           "calculations. Please use the "
+                                                           "export button to create a text "
+                                                           "file of all your calculations for "
+                                                           "this session", wrap=250,
+                               justify=LEFT, width=40, bg=background)
+        self.history_text.grid(row=1)
+
+        history_string = ""
+
+        if len(calc_history) >= 7:
+            for item in range(0, 7):
+                history_string += calc_history[len(calc_history)
+                                                - item - 1]+"\n"
+
+        else:
+            for item in calc_history:
+                history_string += calc_history[len(calc_history) -
+                                                calc_history.index(item) - 1] + "\n"
+                self.history_text.config(text="Here is your calculation "
+                                              "history. You can use the "
+                                              "export button to save this "
+                                              "data to a text file if "
+                                              "desired.")
+
+        self.calc_label = Label(self.history_frame, text=history_string,
+                                bg=background,font="Arial 12", justify=LEFT)
+        self.calc_label.grid(row=2)
+
+        self.export_dismiss_frame = Frame(self.history_frame)
+        self.export_dismiss_frame.grid(row=3, pady=10)
+
+        self.export_button = Button(self.export_dismiss_frame, text="Export",
+                                    font="Arial 12 bold")
+        self.export_button.grid(row=0,column=0)
+
+        self.dismiss_button = Button(self.export_dismiss_frame, text="Dismiss",
+                                     font="Arial 12 bold", command=partial(self.close_history, partner))
+        self.dismiss_button.grid(row=0, column=1)
+
+    def close_history(self, partner):
+        # Put history button back to normal
+        partner.calc_hist_button.config(state=NORMAL)
+        self.history_box.destroy()
 
 # main routine
 if __name__ == "__main__":
     root = Tk()
     root.title("Temp Converter")
-    root.resizable(width=False, height=False)
     something = Converter(root)
     root.mainloop()
+
+

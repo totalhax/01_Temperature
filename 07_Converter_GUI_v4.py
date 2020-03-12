@@ -65,8 +65,12 @@ class Converter:
         self.hist_help_frame.grid(row=5, pady=10)
 
         self.calc_hist_button = Button(self.hist_help_frame, font="System 7 bold",
-                                       text="Calculation History", width=20)
+                                       text="Calculation History", width=20,
+                                       command=lambda: self.history(self.all_calc_list))
         self.calc_hist_button.grid(row=0, column=0)
+
+        if len(self.all_calc_list) == 0:
+            self.calc_hist_button.config(state=DISABLED)
 
         self.help_button = Button(self.hist_help_frame, font="System 7 bold",
                                   text="Help", width=5)
