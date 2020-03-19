@@ -1,0 +1,5 @@
+123 degrees F is 50.6 degrees C
+1232 degrees F is 666.7 degrees C
+1232 degrees F is 666.7 degrees C
+12324 degrees F is 6828.9 degrees C
+12324 degrees C is 22215.2 degrees F
